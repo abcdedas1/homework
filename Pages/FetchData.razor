@@ -1,0 +1,31 @@
+﻿@page "/fetchdata"
+@using HelloNetMauiBlazorHybridApp.Services
+@inject IPoetryStorage _poetryStorage
+<BootstrapInputGroup style="width: 500px;">
+    <BootstrapInputGroupLabel DisplayText="搜索姓名" style="width: 80px;"></BootstrapInputGroupLabel>
+    <BootstrapInput @bind-Value="_query"></BootstrapInput>
+    <Button OnClick="QueryAsync" style="float:left;margin-left:30px;">搜索</Button>
+    <Button OnClick="ReturnQuery" style="float:left;margin-left:100px;">返回</Button>
+    </BootstrapInputGroup>
+
+    
+@foreach (var poetry in _poetries)
+{
+    <Card>
+        <BodyTemplate>
+            <div style="margin-bottom:20px">    姓名    @poetry.Name</div>
+            <div>联系方式    @poetry.Content</div>
+            <Button OnClick="@(() =>delete(@_poetries.ToList().IndexOf(poetry)))">删除</Button>
+        </BodyTemplate>
+    </Card>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _poetryStorage.InitializeAsync();
+        await Get();
+
+    }
+    
+}
